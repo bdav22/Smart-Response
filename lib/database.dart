@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:youtubedrawer/profile.dart';
+import 'package:youtubedrawer/user.dart';
 
 class DatabaseService {
 
@@ -8,18 +10,46 @@ class DatabaseService {
   // collection reference
   final CollectionReference profileCollection = Firestore.instance.collection('profiles');
 
-  Future<void> updateUserData(String position, String name, String rank) async {
+  Future updateUserData(String name, String rank, String department) async {
     return await profileCollection.document(uid).setData({
-      'position': position,
       'name': name,
       'rank': rank,
+      'department': department,
     });
   }
 
+  // userData from snapshot
+  UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
+    return UserData(
+      uid: uid,
+      name: snapshot.data['name'],
+      rank: snapshot.data['rank'],
+      department: snapshot.data['department'],
+    );
+  }
+
+  // profile list from snapshot
+  List<Profile> _ProfileListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc){
+      return Profile(
+        name: doc.data['name'] ?? '',
+        rank: doc.data['rank'] ?? '',
+        department: doc.data['department'] ?? '',
+      );
+    }).toList();
+  }
+
   //get profiles stream
-Stream<QuerySnapshot> get profiles {
-    return profileCollection.snapshots();
+Stream<List<Profile>> get profiles {
+    return profileCollection.snapshots()
+    .map(_ProfileListFromSnapshot);
 }
 
+
+//get user doc stream
+Stream<UserData> get userData {
+    return profileCollection.document(uid).snapshots()
+        .map(_userDataFromSnapshot);
+}
 
 }

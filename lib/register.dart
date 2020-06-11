@@ -59,6 +59,7 @@ class _RegisterState extends State<Register> {
               ),
               SizedBox(height: 20.0),
               TextFormField(
+                autocorrect: false,
                 decoration: textInputDecoration.copyWith(hintText: 'Password'),
                 obscureText: true,
                 validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
@@ -68,7 +69,7 @@ class _RegisterState extends State<Register> {
               ),
               SizedBox(height: 20.0),
               RaisedButton(
-                color: Colors.pink,
+                color: Colors.red[700],
                 child: Text(
                   'Register',
                   style: TextStyle(color: Colors.white),

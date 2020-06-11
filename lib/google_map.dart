@@ -1,39 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
-class MyApp extends StatefulWidget {
+class MapPage extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _MapPageState createState() => _MapPageState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MapPageState extends State<MapPage> {
+
+  bool mapToggle = false;
+
+  var currentLocation;
+
   GoogleMapController mapController;
 
-  final LatLng _center = const LatLng(45.521563, -122.677433);
-
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+  void initState() {
+    super.initState();
+    Geolocator().getCurrentPosition().then((currloc) {
+      setState(() {
+        currentLocation = currloc;
+        mapToggle = true;
+      });
+    });
   }
 
+  void getLocation() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    print(position);
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Maps Sample App'),
-        ),
-        body: GoogleMap(
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: _center,
-            zoom: 11.0,
-          ),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Map Demo'),
+      ),
+      body: Column(
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              Container(
+                  height: MediaQuery.of(context).size.height - 80.0,
+                  width: double.infinity,
+                  child: mapToggle ?
+                  GoogleMap(
+                    initialCameraPosition: CameraPosition(target: LatLng(currentLocation.latitude, currentLocation.longitude), zoom: 10),
+                    onMapCreated: onMapCreated,
+                    myLocationEnabled: true,
+                    mapType: MapType.hybrid,
+                  ):
+                  Center(child:
+                  Text('Loading.. Please wait..',
+                    style: TextStyle(
+                        fontSize: 20.0
+                    ),))
+              )
+            ],
+          )
+        ],
       ),
     );
   }
+
+  void onMapCreated(GoogleMapController controller) {
+    setState(() {
+      mapController = controller;
+    });
+  }
 }
+
+
+
+
 

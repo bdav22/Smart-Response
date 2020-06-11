@@ -7,6 +7,10 @@ import 'package:youtubedrawer/loading.dart';
 
 class SignIn extends StatefulWidget {
 
+  String email;
+  String password;
+
+
   final Function toggleView;
   SignIn({ this.toggleView });
 
@@ -61,6 +65,7 @@ class _SignInState extends State<SignIn> {
               ),
               SizedBox(height: 20.0),
               TextFormField(
+                autocorrect: false,
                 decoration: textInputDecoration.copyWith(hintText: 'Password'),
                 obscureText: true,
                 validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
@@ -70,7 +75,7 @@ class _SignInState extends State<SignIn> {
               ),
               SizedBox(height: 20.0),
               RaisedButton(
-                color: Colors.pinkAccent,
+                color: Colors.redAccent[700],
                 child: Text(
                   'Sign In',
                   style: TextStyle(color: Colors.white),

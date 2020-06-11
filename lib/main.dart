@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 import 'package:youtubedrawer/auth.dart';
+
+import 'package:youtubedrawer/route_generator.dart';
 import 'package:youtubedrawer/user.dart';
 import 'package:youtubedrawer/wrapper.dart';
+
+
+
+
+
 
 
 
@@ -16,6 +24,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return StreamProvider.value(
@@ -24,11 +35,15 @@ class _MyAppState extends State<MyApp> {
         value: AuthService().user,
         child: MaterialApp(
           home: Wrapper(),
+          initialRoute: '/',
+          onGenerateRoute: RouteGenerator.generateRoute,
         ),
       ),
     );
   }
 }
+
+
 
 
 

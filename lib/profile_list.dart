@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:youtubedrawer/profile_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:youtubedrawer/profile.dart';
 
 class ProfileList extends StatefulWidget {
   @override
@@ -11,12 +12,13 @@ class _ProfileListState extends State<ProfileList> {
   @override
   Widget build(BuildContext context) {
 
-    final profiles = Provider.of<QuerySnapshot>(context);
-    //print(profiles.documents);
-    for (var doc in profiles.documents) {
-      print(doc.data);
-    }
+    final profiles = Provider.of<List<Profile>>(context) ?? [];
 
-    return Container();
+    return ListView.builder(
+      itemCount: profiles.length,
+      itemBuilder: (context, index) {
+        return ProfileTile(profile: profiles[index]);
+      },
+    );
   }
 }
